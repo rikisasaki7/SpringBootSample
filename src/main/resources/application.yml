@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: SpringBootSample
+  messages:
+    basename: messages,ValidationMessages
