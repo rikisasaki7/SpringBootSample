@@ -1,20 +1,28 @@
 package com.example.demo.user.controller;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.user.application.UserApplicationService;
 import com.example.demo.user.form.SignupForm;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -58,6 +66,59 @@ public class SignupController {
 		}
 		// ログイン画面にリダイレクト
 		return "redirect:/login";
+	}
+
+	/** ユーザーID重複の例外処理 */
+	@ExceptionHandler(DuplicateKeyException.class)
+	public String duplicateKeyExceptionHandler(
+			DuplicateKeyException e,
+			Model model,
+			HttpServletRequest request,
+			RedirectAttributes redirectAttributes) {
+
+		// 入力内容の取得
+		SignupForm signupForm = generateFormFromRequest(request);
+		redirectAttributes.addFlashAttribute("signupForm", signupForm);
+
+		// エラーメッセージ
+		String errorMsg = "ユーザーIDが既に使用されています。";
+		redirectAttributes.addFlashAttribute("errorMessage", errorMsg);
+		return "redirect:/user/signup";
+	}
+
+	/** その他の例外処理 */
+	@ExceptionHandler(Exception.class)
+	public String exceptionHandler(
+			Exception e,
+			Model model,
+			HttpServletRequest request,
+			RedirectAttributes redirectAttributes) {
+
+		// 入力内容の取得
+		SignupForm signupForm = generateFormFromRequest(request);
+		redirectAttributes.addFlashAttribute("signupForm", signupForm);
+
+		// エラーメッセージ
+		String errorMsg = "ユーザー登録に失敗しました。";
+		redirectAttributes.addFlashAttribute("errorMessage", errorMsg);
+		return "redirect:/user/signup";
+
+	}
+
+	private SignupForm generateFormFromRequest(HttpServletRequest request) {
+		SignupForm signupForm = new SignupForm();
+		signupForm.setUserId(request.getParameter("userId"));
+		signupForm.setPassword(request.getParameter("password"));
+		signupForm.setUserName(request.getParameter("userName"));
+		signupForm.setAge(Integer.valueOf(request.getParameter("age")));
+		signupForm.setGender(Integer.valueOf(request.getParameter("gender")));
+
+		String birthdayStr = request.getParameter("birthday");
+		DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		LocalDate localDate = LocalDate.parse(birthdayStr, dateTimeFormat);
+		Date birthday = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+		signupForm.setBirthday(birthday);
+		return signupForm;
 	}
 
 }

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>CommonError</title>
+</head>
+
+<body>
+  <!-- Spring boot標準のエラー情報。Thymeleaf式を記述すると画面ひょうじしてくれる -->
+  <h1 th:text="${status} + ' ' + ${error}" />
+
+  <div style="margin: 20px 0;">
+    <h2>エラー詳細</h2>
+    <table border="1" cellpadding="10">
+      <tr>
+        <th>項目</th>
+        <th>値</th>
+      </tr>
+      <tr>
+        <td>Status</td>
+        <td th:text="${status}" />
+      </tr>
+      <tr>
+        <td>Error</td>
+        <td th:text="${error}" />
+      </tr>
+      <tr>
+        <td>Message</td>
+        <td th:text="${message}" />
+      </tr>
+      <tr>
+        <td>Timestamp</td>
+        <td th:text="${timestamp}" />
+      </tr>
+      <tr>
+        <td>Path</td>
+        <td th:text="${path}" />
+      </tr>
+      <tr>
+        <td>Exception</td>
+        <td th:text="${exception}" />
+      </tr>
+      <tr>
+        <td>Trace</td>
+        <td>
+          <pre th:text="${trace}" style="font-size: 12px; max-height: 300px; overflow-y: auto;" />
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <a th:href="@/user/list">ホーム画面に戻る</a>
+</body>
+
+</html>

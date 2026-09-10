@@ -3,3 +3,10 @@ spring:
     name: SpringBootSample
   messages:
     basename: messages,ValidationMessages
+
+server:
+  error:
+    include-message: always
+    include-stacktrace: always
+    include-exception: true
+    include-binding-errors: always

@@ -47,5 +47,5 @@ public class SignupForm {
 
   // @NotNull(message = "性別は必須です")
   @NotNull
-  private String gender;
+  private Integer gender;
 }
