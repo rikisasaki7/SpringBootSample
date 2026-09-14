@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: sample-dev
+
+sample:
+  test: ${SAMPLE_TEST:dev}
+
+log:
+  file:
+    path: ${LOG_FILE_PATH:./sample-dev.log}
+    pattern: ${log.file.path}-%d{yyyy-MM-dd}.log.zip

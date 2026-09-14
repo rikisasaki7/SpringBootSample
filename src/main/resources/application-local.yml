@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: sample-local
+
+sample:
+  test: ${SAMPLE_TEST:local}
+
+log:
+  file:
+    path: ${LOG_FILE_PATH:./sample-local.log}
+    pattern: ${log.file.path}-%d{yyyy-MM-dd}.log.zip

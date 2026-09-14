@@ -1,6 +1,9 @@
 spring:
   application:
     name: SpringBootSample
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+    default: local
   messages:
     basename: messages,ValidationMessages
 

@@ -3,8 +3,23 @@
   <!-- 設定値 -->
   <property name="charset" value="UTF-8" />
   <property name="format" value="aaaaaaaaa %d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] - %msg%n" />
-  <property name="file.path" value="./sample-local.log" />
-  <property name="file.path.pattern" value="${file.path}-%d{yyyy-MM-dd}.log" />
+  <!-- <property name="file.path" value="./sample-local.log" />
+  <property name="file.path.pattern" value="${file.path}-%d{yyyy-MM-dd}.log" /> -->
+
+  <!-- springPropertyを使うと、application.ymlから値を取得できる。profileに沿った値を設定可能になる -->
+  <springProperty name="file.path" source="log.file.path" />
+  <springProperty name="file.path.pattern" source="log.file.pattern" />
+
+  <!--profile毎のログレベル -->
+  <springProfile name="local">
+    <property name="log.level" value="DEBUG" />
+    <property name="log.level.hibernatre" value="TRACE" />
+  </springProfile>
+  <springProfile name="dev">
+    <property name="log.level" value="INFO" />
+    <property name="log.level.hibernatre" value="INFO" />
+  </springProfile>
+
 
   <!-- コンソール出力 -->
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
@@ -37,9 +52,9 @@
   </root>
 
 <!-- ログ出力レベルの設定 -->
-<logger name="com.example.demo" level="debug" />
-<logger name="org.hibernate.SQL" level="debug" />
-<logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="trace" />
-<logger name="org.hibernate.type.EnumType" level="trace" />
+<logger name="com.example.demo" level="${log.level}" />
+<logger name="org.hibernate.SQL" level="${log.level}" />
+<logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="${log.level.hibernate}" />
+<logger name="org.hibernate.type.EnumType" level="${log.level.hibernate}" />
 
 </configuration>
