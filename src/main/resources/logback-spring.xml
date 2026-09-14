@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <!-- 設定値 -->
+  <property name="charset" value="UTF-8" />
+  <property name="format" value="aaaaaaaaa %d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] - %msg%n" />
+  <property name="file.path" value="./sample-local.log" />
+  <property name="file.path.pattern" value="${file.path}-%d{yyyy-MM-dd}.log" />
+
+  <!-- コンソール出力 -->
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <target>System.out</target>
+    <!-- 出力される文字列に関する箇所-->
+    <encoder>
+      <charset>${charset}</charset>
+      <pattern>${format}</pattern>
+    </encoder>
+  </appender>
+
+  <!-- ファイル出力 -->
+  <appender name="APP_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!-- 出力先 -->
+    <file>${file.path}</file>
+    <!-- ローリングポリシー -->
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${file.path.pattern}</fileNamePattern>
+      <maxHistory>3</maxHistory>
+    </rollingPolicy>
+    <!-- 出力される文字列に関する箇所-->
+    <encoder>
+      <pattern>${format}</pattern>
+    </encoder>
+  </appender>
+
+  <root level="INFO">
+    <appender-ref ref="STDOUT" />
+    <appender-ref ref="APP_LOG" />
+  </root>
+
+<!-- ログ出力レベルの設定 -->
+<logger name="com.example.demo" level="debug" />
+<logger name="org.hibernate.SQL" level="debug" />
+<logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="trace" />
+<logger name="org.hibernate.type.EnumType" level="trace" />
+
+</configuration>
