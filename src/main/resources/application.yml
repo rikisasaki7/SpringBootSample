@@ -1,11 +1,46 @@
 spring:
   application:
     name: SpringBootSample
+  # DB設定（h2）
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+  # DB初期化（h2）
+  sql:
+    init:
+      encoding: UTF-8
+      model: embedded
+      schema-locations: classpath:sql/schema.sql
+      data-locations: classpath:sql/data.sql
+  # H2設定
+  h2:
+    console:
+      enabled: true
+
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:local}
     default: local
   messages:
     basename: messages,ValidationMessages
+
+# Mybatis
+mybatis:
+  mapper-locations: classpath*:/mapper/h2/*.xml
+  type-aliases-package: com.example.demo.*
+  configuration:
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    '[com.example.demo]': debug
+    # '[org.hibernate]': debug
+    #   SQL: debug
+    #   type:
+    #     '[descriptor.sql.BasicBinder]': trace
+    #     EnumType: trace
+
 
 # log level
 # logging:
@@ -17,14 +52,6 @@ spring:
   #     max-file-size: 10KB
   #     max-history: 7
   #     file-name-pattern: ${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz
-
-# level:
-#   '[com.example.demo]': debug
-#   '[org.hibernate]': debug
-#     SQL: debug
-#     type:
-#       '[descriptor.sql.BasicBinder]': trace
-#       EnumType: trace
 
 server:
   error:

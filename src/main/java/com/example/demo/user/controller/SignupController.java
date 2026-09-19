@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,21 +21,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.user.application.UserApplicationService;
+import com.example.demo.user.domain.model.MUser;
+import com.example.demo.user.domain.service.UserService;
 import com.example.demo.user.form.SignupForm;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
 @RequestMapping("/user")
+@RequiredArgsConstructor
 public class SignupController {
 
 	private final UserApplicationService userApplicationService;
 
-	public SignupController(UserApplicationService userApplicationService) {
-		this.userApplicationService = userApplicationService;
-	}
+	private final UserService userService;
+
+	private final ModelMapper modelMapper;
+
+	// public SignupController(UserApplicationService userApplicationService) {
+	// this.userApplicationService = userApplicationService;
+	// }
 
 	/** ユーザー登録画面を表示 */
 	@GetMapping("/signup")
@@ -64,6 +73,12 @@ public class SignupController {
 			log.info("bindingresult:{}", bindingResult);
 			return getSignup(model, Locale.getDefault(), signupForm);
 		}
+
+		// formをMUserクラスに変換
+		MUser user = modelMapper.map(signupForm, MUser.class);
+		// ユーザー登録
+		userService.signup(user);
+
 		// ログイン画面にリダイレクト
 		return "redirect:/login";
 	}

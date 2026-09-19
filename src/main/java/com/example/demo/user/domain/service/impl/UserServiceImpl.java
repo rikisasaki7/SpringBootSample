@@ -1,0 +1,51 @@
+package com.example.demo.user.domain.service.impl;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.example.demo.user.domain.model.MUser;
+import com.example.demo.user.domain.service.UserService;
+import com.example.demo.user.repository.UserMapper;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class UserServiceImpl implements UserService {
+
+  private final UserMapper mapper;
+
+  @Override
+  public void signup(MUser user) {
+    user.setDepartmentId(1);
+    user.setRole("USER");
+    int count = mapper.insertOne(user);
+    log.info("登録件数={}件", count);
+  }
+
+  @Override
+  public List<MUser> getUsers() {
+    return mapper.findMany();
+  }
+
+  @Override
+  public MUser getUser(String userId) {
+    return mapper.findOne(userId);
+  }
+
+  @Override
+  public void updateUserOne(String userId, String password, String userName) {
+    int count = mapper.updateOne(userId, password, userName);
+    log.info("更新件数：{}件", count);
+  }
+
+  @Override
+  public void deleteUserOne(String userId) {
+    int count = mapper.deleteOne(userId);
+    log.info("削除件数：{}件", count);
+
+  }
+}
