@@ -2,7 +2,11 @@ package com.example.demo.user.domain.service.impl;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.user.domain.model.MUser;
 import com.example.demo.user.domain.service.UserService;
@@ -27,8 +31,13 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public List<MUser> getUsers() {
-    return mapper.findMany();
+  public Page<MUser> getUsers(MUser user, Pageable pageable) {
+    // ユーザー一覧取得
+    List<MUser> userList = mapper.findMany(user, pageable);
+    // ユーザー一覧の件数取得
+    int count = mapper.count(user);
+    // Pageのインスタンス生成
+    return new PageImpl<MUser>(userList, pageable, count);
   }
 
   @Override
@@ -42,6 +51,7 @@ public class UserServiceImpl implements UserService {
     log.info("更新件数：{}件", count);
   }
 
+  @Transactional
   @Override
   public void deleteUserOne(String userId) {
     int count = mapper.deleteOne(userId);
