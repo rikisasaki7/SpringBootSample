@@ -1,0 +1,29 @@
+package com.example.demo.di;
+
+import org.springframework.stereotype.Component;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import lombok.extern.slf4j.Slf4j;
+
+@Component("SampleComponent2")
+@Slf4j
+public class SampleComponent2 implements SampleComponent {
+
+  private String str = "Sample2";
+
+  @Override
+  public String getStr() {
+    return this.str;
+  }
+
+  @PostConstruct
+  public void init() {
+    log.info(str + "init");
+  }
+
+  @PreDestroy
+  public void preDestroy() {
+    log.info(str + "preDestroy");
+  }
+}
