@@ -57,6 +57,9 @@ logging:
   #     file-name-pattern: ${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz
 
 server:
+  servlet:
+    session:
+      timeout: 1m
   error:
     include-message: always
     include-stacktrace: always

@@ -6,6 +6,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,16 +15,19 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import com.example.demo.user.domain.model.LoginUser;
 import com.example.demo.user.domain.model.MUser;
 import com.example.demo.user.domain.service.UserService;
 import com.example.demo.user.form.UserListForm;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/user")
 @SessionAttributes(types = UserListForm.class)
+@Slf4j
 public class UserListController {
 
   // セッションに登録
@@ -39,7 +44,10 @@ public class UserListController {
   public String getUserList(
       Model model,
       @ModelAttribute UserListForm userListForm,
-      @PageableDefault(page = 0, size = 2) Pageable pageable) {
+      @PageableDefault(page = 0, size = 2) Pageable pageable,
+      @AuthenticationPrincipal LoginUser loginUser) {
+
+    log.info("ユーザーID: {}, ユーザー名: {}", loginUser.getUsername(), loginUser.getDisplayUserName());
 
     // formをMUserクラスに変換
     MUser user = modelMapper.map(userListForm, MUser.class);
